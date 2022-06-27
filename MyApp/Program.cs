@@ -9,8 +9,7 @@ using System.Text.Json.Serialization;
 List<string> ListaDeArchivos = new List<string>();
 
 Console.WriteLine("\nIngrese el path de una carpeta a ser buscada: ");
-string PathCarpeta = Console.ReadLine();
-// string PathCarpeta = "/Users/juanigramajo/" + Console.ReadLine();
+string PathCarpeta = "/Users/juanigramajo/Desktop/Fac/04. Segundo año/Primer Cuatrimestre/Taller de Lenguajes I/Trabajos Prácticos/tp09-2022-juanigramajo/" + Console.ReadLine();
 
 if (!(Directory.Exists(PathCarpeta)))
 {
