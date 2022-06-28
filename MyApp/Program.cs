@@ -6,44 +6,53 @@ using System.Text.Json.Serialization;
 
 
 
-List<string> ListaDeArchivos = new List<string>();
+List<Producto> ListaDeProductos = new List<Producto>();
 
-Console.WriteLine("\nIngrese el path de una carpeta a ser buscada: ");
-string PathCarpeta = "/Users/juanigramajo/Desktop/Fac/04. Segundo año/Primer Cuatrimestre/Taller de Lenguajes I/Trabajos Prácticos/tp09-2022-juanigramajo/" + Console.ReadLine();
+Random rand = new Random();
+int cantProductos = rand.Next(1, 13);
 
-if (!(Directory.Exists(PathCarpeta)))
+string path  = "/Users/juanigramajo/Desktop/Fac/04. Segundo año/Primer Cuatrimestre/Taller de Lenguajes I/Trabajos Prácticos/tp09-2022-juanigramajo/MyApp";
+
+
+if (!Directory.Exists(path))
 {
-    Console.WriteLine("\nNo existe la carpeta. ¿Desea crearla?\nOPCIONES\n[S] Si\n[N] No\nIngrese una opción: ");
-    char salida = Char.ToLower(Convert.ToChar(Console.ReadLine()));
-    while ((salida != 's') && (salida != 'n'))
-    {
-        Console.WriteLine("\nError de formato.\nOPCIONES\n[S] Si\n[N] No\nIngrese una opción: ");
-        salida = Char.ToLower(Convert.ToChar(Console.ReadLine()));
-    }
+    Directory.CreateDirectory(path);
+}
 
-    if (salida == 's')
-    {
-        Directory.CreateDirectory(PathCarpeta);
-    }
-
+if (!File.Exists(path + "/Productos.json"))
+{
+    File.Create(path + "/Productos.json");
 } else
 {
-    ListaDeArchivos = Directory.GetFiles(PathCarpeta).ToList();
+    File.Create(path + "/Productos.json").Close();
 }
 
-int bandera = 0;
-List<CrearArchivo> archivos = new List<CrearArchivo>();
 
-foreach (string fileX in ListaDeArchivos)
+for (int i = 0; i < cantProductos; i++)
 {
-    Console.WriteLine(fileX);
+    Producto producto = new Producto();
+    producto = producto.cargarProductos();
 
-    CrearArchivo archivoX = new CrearArchivo(bandera, Path.GetFileNameWithoutExtension(fileX), Path.GetExtension(fileX));
-    bandera++;
-    archivos.Add(archivoX);
-
+    ListaDeProductos.Add(producto);
 }
 
-string jsonString = JsonSerializer.Serialize(archivos);
 
-File.AppendAllText(PathCarpeta + "/index.json", jsonString);
+string jsonString = JsonSerializer.Serialize(ListaDeProductos);
+File.WriteAllText(path + "/Productos.json", jsonString);
+
+
+
+
+
+List<Producto> ListadoDeProductosEnJson = new List<Producto>();
+
+string productosEnJson = File.ReadAllText(path + "/Productos.json");
+
+
+ListadoDeProductosEnJson = JsonSerializer.Deserialize<List<Producto>>(productosEnJson);
+
+
+foreach (Producto productoX in ListadoDeProductosEnJson)
+{
+    productoX.mostrarDatos();
+}
